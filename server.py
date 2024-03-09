@@ -13,8 +13,7 @@ def play_hangman(conn):
 
     while True:
         display_word = "".join([letter if letter in guessed_letters else "_" for letter in word])
-        conn.sendall(f"{stages[attempts]}\nWord: {display_word}\n".encode())
-        conn.sendall("Enter a letter: ".encode())
+        conn.sendall(f"{stages[attempts]}\nWord: {display_word}\nAttempts: {attempts}/{max_attempts}\n".encode())
 
         if "_" not in display_word:
             conn.sendall("Congratulations! You guessed the word correctly.\n".encode())
@@ -24,6 +23,7 @@ def play_hangman(conn):
             conn.sendall(f"{stages[attempts]}\nGame over! The word was: {word}\n".encode())
             break
 
+        conn.sendall("Enter a letter: ".encode())
         letter = conn.recv(1024).decode().strip().lower()
 
         if letter in guessed_letters:
@@ -33,7 +33,7 @@ def play_hangman(conn):
             conn.sendall("Correct guess!\n".encode())
         else:
             attempts += 1
-            conn.sendall(f"Wrong guess! Attempts left: {max_attempts - attempts}\n".encode())
+            conn.sendall(f"Wrong guess!\n".encode())
 
 
 with socket(AF_INET, SOCK_STREAM) as s:
