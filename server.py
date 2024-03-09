@@ -28,8 +28,8 @@ def play_hangman(conn):
     attempts = 0
 
     while True:
-        display_word = "".join([letter if letter in guessed_letters else "_" for letter in word])
-        conn.sendall(f"{stages[attempts]}\nWord: {display_word}\nAttempts: {attempts}/{max_attempts}\n".encode())
+        display_word = "".join([letter if letter in guessed_letters else "_" for letter in word])       # Display the word with guessed letters
+        conn.sendall(f"{stages[attempts]}\nWord: {display_word}\nAttempts: {attempts}/{max_attempts}\n".encode())       # Send game status to client
 
         if "_" not in display_word:
             conn.sendall("Congratulations! You guessed the word correctly.\n".encode())
@@ -43,13 +43,13 @@ def play_hangman(conn):
         letter = conn.recv(1024).decode().strip().lower()
 
         if letter in guessed_letters:
-            conn.sendall("You already guessed that letter. Try again.\n".encode())
+            conn.sendall("You already guessed that letter. Try again.\n".encode())     # Reject repeated guesses
         elif letter in word:
             guessed_letters.add(letter)
-            conn.sendall("Correct guess!\n".encode())
+            conn.sendall("Correct guess!\n".encode())    # Accept correct guesses
         else:
             attempts += 1
-            conn.sendall(f"Wrong guess!\n".encode())
+            conn.sendall(f"Wrong guess!\n".encode())    # Accept wrong guesses
 
 
 with socket(AF_INET, SOCK_STREAM) as s:
@@ -67,7 +67,7 @@ with socket(AF_INET, SOCK_STREAM) as s:
     connected = True
     game_active = False
     while connected:
-        data = conn.recv(1024).decode().strip()
+        data = conn.recv(1024).decode().strip()     # Receive data from client
 
         if data == '/q':
             connected = False
@@ -80,17 +80,17 @@ with socket(AF_INET, SOCK_STREAM) as s:
             conn.sendall("Now playing Hangman!\n".encode())
 
         if game_active:
-            play_hangman(conn)
+            play_hangman(conn)          # Play Hangman
             game_active = False
             continue
 
         if data and not game_active:
             print(f"Received: {data}")
-            reply = input("Enter a reply: ")
+            reply = input("Enter a reply: ")        # Get reply from server
 
             if reply == '/q':
                 connected = False
-                print("Shutting down!")
+                print("Shutting down!")             # Shutdown the server
 
             conn.sendall(reply.encode())
 

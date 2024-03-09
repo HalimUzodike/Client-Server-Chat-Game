@@ -23,7 +23,7 @@ def receive_messages(s):
 
     data = ""
     while True:
-        chunk = s.recv(1024).decode()
+        chunk = s.recv(1024).decode()       # Receive data from server
         data += chunk
         if len(chunk) < 1024:
             break
@@ -31,7 +31,7 @@ def receive_messages(s):
 
 
 with socket(AF_INET, SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
+    s.connect((HOST, PORT))                 # Connect to server
     print(f"Connected to {HOST}:{PORT}")
     print("Type /q to quit")
     print("Enter message to send. Please wait for input prompt before entering message...")
@@ -43,20 +43,20 @@ with socket(AF_INET, SOCK_STREAM) as s:
         message = input("Enter Input: ")
 
         if message == "":
-            print("Please enter a message.")
+            print("Please enter a message.")    # Reject empty messages
             continue
 
         if message == '/q':
-            connected = False
+            connected = False   # Shutdown the client
             print("Shutting down!")
 
         if message == "play hangman":
-            s.sendall(message.encode())
+            s.sendall(message.encode())     # Send message to server
             game_active = True
 
         if game_active:
             while True:
-                data = receive_messages(s)
+                data = receive_messages(s)   # Receive messages from server
                 print(data)
 
                 if "Congratulations!" in data or "Game over!" in data:
@@ -68,15 +68,15 @@ with socket(AF_INET, SOCK_STREAM) as s:
             continue
 
         if not game_active:
-            s.sendall(message.encode())
+            s.sendall(message.encode())     # Send message to server
             data = receive_messages(s)
 
         if data == '/q':
             connected = False
-            print("Server has requested shutdown. Shutting down!")
+            print("Server has requested shutdown. Shutting down!")  # Shutdown the client
             break
 
         if data and not game_active:
-            print(f"Received: {data}")
+            print(f"Received: {data}")      # Print received message
 
     s.close()
