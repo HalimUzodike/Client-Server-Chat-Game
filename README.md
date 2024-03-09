@@ -1,5 +1,5 @@
 # Client-Server-Chat-Game
-# Hangman Client-Server Game
+## Hangman Client-Server Game
 
 This project is a simple implementation of the classic Hangman game using a client-server architecture. The server hosts the game, and the client connects to the server to play the game.
 
@@ -23,11 +23,7 @@ This project is a simple implementation of the classic Hangman game using a clie
 
 ## Author
 
-- Name: Halim Uzodike
-
-## Date
-
-- March 09, 2024
+- Halim Uzodike
 
 ## References
 
