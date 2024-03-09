@@ -17,30 +17,50 @@ def receive_messages(s):
 with socket(AF_INET, SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     print(f"Connected to {HOST}:{PORT}")
+    print("Type /q to quit")
+    print("Enter message to send. Please wait for input prompt before entering message...")
+    print("Note: Type 'play hangman' to start a game of Hangman")
 
-    try:
-        while True:
-            message = input("Enter a message (or '/q' to quit): ")
+    connected = True
+    while connected:
+        game_active = False
+        message = input("Enter Input: ")
+
+        if message == "":
+            print("Please enter a message.")
+            continue
+
+        if message == '/q':
+            connected = False
+            print("Shutting down!")
+
+        if message == "play hangman":
             s.sendall(message.encode())
+            game_active = True
 
-            if message.lower() == "/q":
-                break
+        if game_active:
+            while True:
+                data = receive_messages(s)
+                print(data)
 
-            if message.lower() == "play hangman":
-                while True:
-                    data = receive_messages(s)
-                    print(data)
+                if "Congratulations!" in data or "Game over!" in data:
+                    break
 
-                    if "Congratulations!" in data or "Game over!" in data:
-                        break
-
+                if "Enter a letter:" in data:
                     guess = input().strip().lower()
                     s.sendall(guess.encode())
-            else:
-                data = receive_messages(s)
-                print(f"Received: {data}")
-    except ConnectionResetError:
-        print("Server closed the connection.")
-    finally:
-        print("Closing connection.")
-        s.close()
+            continue
+
+        if not game_active:
+            s.sendall(message.encode())
+            data = receive_messages(s)
+
+        if data == '/q':
+            connected = False
+            print("Server has requested shutdown. Shutting down!")
+            break
+
+        if data and not game_active:
+            print(f"Received: {data}")
+
+    s.close()
