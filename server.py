@@ -1,3 +1,17 @@
+# Author: Chukwuhalim Uzodike
+# GitHub username: HalimUzodike
+# Date: 03/09/2024
+# Description: A simple server that plays Hangman with a client.
+# References:
+# [1] https://docs.python.org/3/library/socket.html
+# [2] https://docs.python.org/3/library/socket.html#socket.socket.recv
+# [3] https://docs.python.org/3/library/socket.html#socket.socket.sendall
+# [4] https://docs.python.org/3/library/socket.html#socket.socket.bind
+# [5] https://docs.python.org/3/library/socket.html#socket.socket.listen
+# [6] https://docs.python.org/3/library/socket.html#socket.socket.accept
+# [7] https://gaia.cs.umass.edu/kurose_ross/online_lectures.htm
+
+
 from socket import *
 from hangman_art import stages
 
@@ -6,6 +20,8 @@ PORT = 8888
 
 
 def play_hangman(conn):
+    """Play a game of Hangman."""
+
     word = "python"
     guessed_letters = set()
     max_attempts = len(stages) - 1

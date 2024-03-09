@@ -1,3 +1,17 @@
+# Author: Chukwuhalim Uzodike
+# GitHub username: HalimUzodike
+# Date: 03/09/2024
+# Description: A simple client that plays Hangman with a server.
+# References:
+# [1] https://docs.python.org/3/library/socket.html
+# [2] https://docs.python.org/3/library/socket.html#socket.socket.recv
+# [3] https://docs.python.org/3/library/socket.html#socket.socket.sendall
+# [4] https://docs.python.org/3/library/socket.html#socket.socket.bind
+# [5] https://docs.python.org/3/library/socket.html#socket.socket.listen
+# [6] https://docs.python.org/3/library/socket.html#socket.socket.accept
+# [7] https://gaia.cs.umass.edu/kurose_ross/online_lectures.htm
+
+
 from socket import *
 
 HOST = 'localhost'
@@ -5,6 +19,8 @@ PORT = 8888
 
 
 def receive_messages(s):
+    """Receive messages from the server."""
+
     data = ""
     while True:
         chunk = s.recv(1024).decode()
